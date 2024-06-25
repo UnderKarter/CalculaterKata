@@ -55,10 +55,10 @@ public class Converter {
         char[] arr = s.toCharArray();
 
         int arabic;
+        int count = 0;
         int result = romanKeyMap.get(arr[end]);
 
-        int count = 0;
-        //Проверяем есть ли больше трех одинаковых знаков подряд
+        //Проверяем, есть ли больше трех одинаковых знаков подряд
         for(int i = 1; i < arr.length; i++){
             if(arr[i - 1] == arr[i]){
                 count++;
@@ -69,12 +69,14 @@ public class Converter {
                 return result = 0;
             }
         }
-        //Проверяем есть ли больше двух одинаковых знаков перед больший знаком
+
+        //Проверяем есть ли больше двух одинаковых знаков перед большим знаком
         if (arr.length >= 3){
-            int c = arr.length -1;
-            int b = arr.length -2;
-            int a = arr.length -3;
-            if (a == b || a < c){
+            int c = arr[end];
+            int b = arr[end - 1];
+            int a = arr[end - 2];
+
+            if (a == b && a < c){
                 return result = 0;
             }
         }
