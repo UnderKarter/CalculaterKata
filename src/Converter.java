@@ -1,6 +1,6 @@
 import java.util.TreeMap;
 
-public class Converter {
+class Converter {
     TreeMap<Character, Integer> romanKeyMap = new TreeMap<>();
     TreeMap<Integer, String> arabicKeyMap = new TreeMap<>();
 

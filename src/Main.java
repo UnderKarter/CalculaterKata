@@ -2,12 +2,16 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws ScannerException {
-
-        Converter converter = new Converter();
         Scanner scanner = new Scanner(System.in);
         System.out.print("Введите выражение: ");
-        String input = scanner.nextLine();
+        String text = scanner.nextLine();
+        calc(text);
+    }
 
+    public static String calc(String input) throws ScannerException {
+
+        Converter converter = new Converter();
+        String textResult = "Результат";
         String[] actions = {"+", "-", "*", "/"};
         String[] gotActions = {"\\+", "-", "\\*", "/"};
 
@@ -40,19 +44,40 @@ public class Main {
         }
 
         //Инициализация
-        int a, b;
+        int a = 0;
+        int b = 0;
+        boolean isRoman = false;
         try {
             //Значение арабских конвертируем в int
             a = Integer.parseInt(data[0]);
             b = Integer.parseInt(data[1]);
+            isRoman = false;
         } catch (NumberFormatException e) {
             //если римские, то конвертируем их в арабские
-            a = converter.romanToInt(data[0]);
-            b = converter.romanToInt(data[1]);
+            try {
+                a = converter.romanToInt(data[0]);
+            } catch (NullPointerException exception) {
+                System.err.println("Первое значение не целочисленное");
+            }
+            try {
+                b = converter.romanToInt(data[1]);
+                isRoman = true;
+            } catch (NullPointerException exception) {
+                System.err.println("Второе значение не целочисленное");
+            }
+        } catch (ArrayIndexOutOfBoundsException e){}
+
+        //Проыерка диапазона цифр
+        if ((a > 10 || b > 10) || (a < 1 || b < 1)) {
+            if (isRoman) {
+                throw new ScannerException("Цифры должны быть в диапазоне от 1 до 10 включительно");
+            } else {
+                throw new ScannerException("Цифры должны быть в диапазоне от I до X включительно");
+            }
         }
 
         //Выполняем арифметическое действие
-        int result;
+        int result = 0;
         switch (actions[actionIndex]) {
             case "+":
                 result = a + b;
@@ -68,21 +93,18 @@ public class Main {
                 break;
         }
 
-        //Определяем формат
-        boolean isRoman = converter.isRoman(data[0]);
         if (isRoman) {
             // Проверка формата римских цифр
             try {
                 System.out.println(converter.intToRoman(result));
+                textResult = converter.intToRoman(result);
             } catch (NullPointerException e) {
                 System.err.println("В римском формате нет таких цифр");
             }
         } else {
-            //Проыерка диапазона арабских цифр
-            if ((a > 10 || b > 10) || (a < 1 || b < 1)) {
-                    throw new ScannerException("Арабские цифры используются в диапазоне от 1 до 10");
-            }
             System.out.print(result);
+            textResult = String.valueOf(result);
         }
+        return textResult;
     }
 }
